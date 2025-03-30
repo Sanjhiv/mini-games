@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: #f4f4f4;
         }
         .game-container {
             display: flex;
@@ -21,34 +22,55 @@
             padding: 20px;
             border: 2px solid #000;
             border-radius: 10px;
+            background-color: white;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
             cursor: pointer;
-            background-color: lightgray;
         }
-        .player1 { color: red; }
-        .player2 { color: blue; }
+        .game-card img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        .game-card button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h1>Mini Games</h1>
     <div class="game-container">
-        <div class="game-card" onclick="startGame('oddOrEven')">Odd or Even</div>
-        <div class="game-card" onclick="startGame('ticTacToe')">Tic Tac Toe</div>
-        <div class="game-card" onclick="startGame('flappyBall')">Flappy Ball</div>
+        <div class="game-card" onclick="startGame('ttt')">
+            <img src="icons/tic_tac_toe.png" alt="Tic Tac Toe">
+            <button>Play</button>
+        </div>
+        <div class="game-card" onclick="startGame('ooe')">
+            <img src="icons/flappy_bird.png" alt="ODD or EVEN">
+            <button>Play</button>
+        </div>
+        <div class="game-card" onclick="startGame('mcm')">
+            <img src="icons/memory_match.png" alt="Memory Match">
+            <button>Play</button>
+        </div>
+        <div class="game-card" onclick="startGame('ctb')">
+            <img src="icons/catch_fruit.png" alt="Catch the Fruit">
+            <button>Play</button>
+        </div>
+        <div class="game-card" onclick="startGame('maze')">
+            <img src="icons/maze_game.png" alt="Maze Game">
+            <button>Play</button>
+        </div>
     </div>
 
     <script>
         function startGame(game) {
-            switch(game) {
-                case 'oddOrEven':
-                    window.location.href = 'odd_or_even.html';
-                    break;
-                case 'ticTacToe':
-                    window.location.href = 'tic_tac_toe.html';
-                    break;
-                case 'flappyBall':
-                    window.location.href = 'flappy_ball.html';
-                    break;
-            }
+            window.location.href = game + '.html';
         }
     </script>
 </body>
