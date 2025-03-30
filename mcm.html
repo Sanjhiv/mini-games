@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Card Match</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1e1e2e;
+            color: white;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #6272a4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .hidden {
+            background-color: #44475a;
+            color: #44475a;
+        }
+    </style>
+</head>
+<body>
+    <h1>Memory Card Match</h1>
+    <button onclick="startGame('player')">Play with Friend</button>
+    <button onclick="startGame('bot')">Play with Bot</button>
+    <p id="score"></p>
+    <div class="board" id="board"></div>
+    <script>
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let currentPlayer = 'Player 1';
+        let scores = { 'Player 1': 0, 'Player 2': 0 };
+        let gameMode = 'player';
+        let botMemory = {};
+
+        function startGame(mode) {
+            gameMode = mode;
+            matchedPairs = 0;
+            scores = { 'Player 1': 0, 'Player 2': 0 };
+            currentPlayer = 'Player 1';
+            botMemory = {};
+            document.getElementById("score").innerText = "Player 1: 0 | Player 2: 0";
+            generateCards();
+            renderBoard();
+        }
+
+        function generateCards() {
+            let values = [...Array(8).keys(), ...Array(8).keys()];
+            values.sort(() => Math.random() - 0.5);
+            cards = values.map(value => ({ value, flipped: false }));
+        }
+
+        function renderBoard() {
+            const board = document.getElementById("board");
+            board.innerHTML = '';
+            cards.forEach((card, index) => {
+                let div = document.createElement("div");
+                div.classList.add("card");
+                if (!card.flipped) div.classList.add("hidden");
+                div.innerText = card.flipped ? card.value : "";
+                div.dataset.index = index;
+                div.addEventListener("click", () => flipCard(index));
+                board.appendChild(div);
+            });
+        }
+
+        function flipCard(index) {
+            if (cards[index].flipped || flippedCards.length >= 2) return;
+            cards[index].flipped = true;
+            flippedCards.push(index);
+            renderBoard();
+            
+            if (flippedCards.length === 2) {
+                setTimeout(checkMatch, 1000);
+            }
+        }
+
+        function checkMatch() {
+            let [first, second] = flippedCards;
+            if (cards[first].value === cards[second].value) {
+                matchedPairs++;
+                scores[currentPlayer]++;
+            } else {
+                cards[first].flipped = false;
+                cards[second].flipped = false;
+                currentPlayer = gameMode === 'player' ? (currentPlayer === 'Player 1' ? 'Player 2' : 'Player 1') : 'Player 1';
+            }
+            flippedCards = [];
+            renderBoard();
+            updateScore();
+            if (matchedPairs === 8) declareWinner();
+            if (gameMode === 'bot' && currentPlayer === 'Player 2') setTimeout(botMove, 1000);
+        }
+
+        function updateScore() {
+            document.getElementById("score").innerText = `Player 1: ${scores['Player 1']} | Player 2: ${scores['Player 2']}`;
+        }
+
+        function declareWinner() {
+            let winner = scores['Player 1'] > scores['Player 2'] ? 'Player 1 Wins!' : (scores['Player 1'] < scores['Player 2'] ? 'Player 2 Wins!' : "It's a Tie!");
+            alert(winner);
+            startGame(gameMode);
+        }
+
+        function botMove() {
+            let available = cards.map((card, index) => !card.flipped ? index : null).filter(index => index !== null);
+            let move = available[Math.floor(Math.random() * available.length)];
+            flipCard(move);
+        }
+    </script>
+</body>
+</html>

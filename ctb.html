@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Falling Fruit</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            background-color: #cce7ff;
+            display: block;
+            margin: auto;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Catch the Falling Fruit</h1>
+    <p>Score: <span id="score">0</span> | High Score: <span id="highScore">0</span> | Misses: <span id="misses">0</span>/3</p>
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const basket = { x: 175, width: 50, height: 20 };
+        const fruits = ['🍎', '🍌', '🍇', '🍉', '🍒'];
+        let fallingObjects = [];
+        let score = 0;
+        let misses = 0;
+        let highScore = localStorage.getItem("highScore") || 0;
+        document.getElementById("highScore").innerText = highScore;
+        
+        function spawnFruit() {
+            let fruit = {
+                x: Math.random() * (canvas.width - 20),
+                y: 0,
+                emoji: fruits[Math.floor(Math.random() * fruits.length)],
+                speed: 2 + Math.random() * 2
+            };
+            fallingObjects.push(fruit);
+        }
+
+        function moveBasket(event) {
+            if (event.key === "ArrowLeft" && basket.x > 0) {
+                basket.x -= 30;
+            } else if (event.key === "ArrowRight" && basket.x < canvas.width - basket.width) {
+                basket.x += 30;
+            }
+        }
+        document.addEventListener("keydown", moveBasket);
+
+        function updateGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "black";
+            ctx.fillRect(basket.x, canvas.height - 30, basket.width, basket.height);
+            
+            fallingObjects.forEach((fruit, index) => {
+                ctx.font = "20px Arial";
+                ctx.fillText(fruit.emoji, fruit.x, fruit.y);
+                fruit.y += fruit.speed;
+                
+                if (fruit.y > canvas.height - 30 && fruit.x > basket.x && fruit.x < basket.x + basket.width) {
+                    fallingObjects.splice(index, 1);
+                    score++;
+                    document.getElementById("score").innerText = score;
+                    if (score > highScore) {
+                        highScore = score;
+                        localStorage.setItem("highScore", highScore);
+                        document.getElementById("highScore").innerText = highScore;
+                    }
+                } else if (fruit.y > canvas.height) {
+                    fallingObjects.splice(index, 1);
+                    misses++;
+                    document.getElementById("misses").innerText = misses;
+                    if (misses >= 3) {
+                        alert("Game Over! Final Score: " + score);
+                        location.reload();
+                    }
+                }
+            });
+            requestAnimationFrame(updateGame);
+        }
+
+        setInterval(spawnFruit, 1000);
+        updateGame();
+    </script>
+</body>
+</html>
