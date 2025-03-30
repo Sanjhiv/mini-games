@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Games</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+        .game-card {
+            width: 200px;
+            padding: 20px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: lightgray;
+        }
+        .player1 { color: red; }
+        .player2 { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Mini Games</h1>
+    <div class="game-container">
+        <div class="game-card" onclick="startGame('oddOrEven')">Odd or Even</div>
+        <div class="game-card" onclick="startGame('ticTacToe')">Tic Tac Toe</div>
+        <div class="game-card" onclick="startGame('flappyBall')">Flappy Ball</div>
+    </div>
+
+    <script>
+        function startGame(game) {
+            switch(game) {
+                case 'oddOrEven':
+                    window.location.href = 'odd_or_even.html';
+                    break;
+                case 'ticTacToe':
+                    window.location.href = 'tic_tac_toe.html';
+                    break;
+                case 'flappyBall':
+                    window.location.href = 'flappy_ball.html';
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

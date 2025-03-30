@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odd or Even</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #282c36;
+            color: white;
+        }
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .player1 { background-color: red; color: white; }
+        .player2 { background-color: blue; color: white; }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        #logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <img id="logo" src="logo.png" alt="Game Logo">
+    <h1>Odd or Even</h1>
+    <div class="container">
+        <p>Choose a mode:</p>
+        <button class="btn player1" onclick="startGame('ai')">Play with AI</button>
+        <button class="btn player2" onclick="startGame('friend')">Play with Friend</button>
+    </div>
+    <p id="result"></p>
+    
+    <script>
+        function startGame(mode) {
+            let playerChoice = prompt("Enter Odd or Even").toLowerCase();
+            let playerNumber = parseInt(prompt("Enter a number (1-10)"));
+            let opponentNumber = mode === 'ai' ? Math.floor(Math.random() * 10) + 1 : parseInt(prompt("Player 2: Enter a number (1-10)"));
+            let sum = playerNumber + opponentNumber;
+            let result = sum % 2 === 0 ? "even" : "odd";
+            
+            let winner;
+            if (playerChoice === result) {
+                winner = mode === 'ai' ? "Player" : "Player 1";
+            } else {
+                winner = mode === 'ai' ? "AI" : "Player 2";
+            }
+            
+            document.getElementById("result").innerHTML = `Sum: ${sum} (${result.toUpperCase()}), Winner: <span class="${winner === 'Player 1' ? 'player1' : 'player2'}">${winner}</span>`;
+        }
+    </script>
+</body>
+</html>
